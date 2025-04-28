@@ -1,9 +1,8 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\Models\Post;
 use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 class PostController extends Controller{
     /**
@@ -15,5 +14,44 @@ class PostController extends Controller{
      public function index(): View{
         $posts = Post::latest()->paginate(5);
         return view('posts.index', compact('posts'));
+     }
+
+   /**
+     * create
+     *
+     * @return View
+     */
+
+     public function create(): View{
+      return view('posts.create');
+     }
+
+   /**
+     * store
+     *
+     * @param  mixed $request
+     * @return RedirectResponse
+     */
+
+     public function store(Request $request): RedirectResponse{
+      // Validasi Form
+      $this->validate($request, [
+         'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+         'title' => 'required|min:5',
+         'content' => 'required|min:10'
+      ]);
+
+      // Upload Image
+      $image = $request->file('image');
+      $image->storeAs('public/posts', $image->hashName());
+
+      // Create Post
+      Post::create([
+         'image' => $image->hashName(),
+         'title' => $request->title,
+         'content' => $request->content
+      ]);
+
+      return redirect()->route('posts.index')->with(['success' => 'Data Berhasil Disimpan!']);
      }
 }
