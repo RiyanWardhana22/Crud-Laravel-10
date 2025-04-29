@@ -20,6 +20,7 @@
                         <p class="tmt-3">
                             {!! $post->content !!}
                         </p>
+                        <a href="{{ route('posts.index') }}" class="btn btn-md btn-success mt-3">KEMBALI</a>
                     </div>
                 </div>
             </div>
