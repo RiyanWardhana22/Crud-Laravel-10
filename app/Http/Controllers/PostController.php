@@ -4,35 +4,21 @@ use App\Models\Post;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-class PostController extends Controller{
-    /**
-     * index
-     *
-     * @return View
-     */
 
+class PostController extends Controller{
+   // METHOD INDEX
      public function index(): View{
         $posts = Post::latest()->paginate(5);
         return view('posts.index', compact('posts'));
      }
 
-   /**
-     * create
-     *
-     * @return View
-     */
 
+   // METHOD CREATE
      public function create(): View{
       return view('posts.create');
      }
 
-   /**
-     * store
-     *
-     * @param  mixed $request
-     * @return RedirectResponse
-     */
-
+   // METHOD STORE 
      public function store(Request $request): RedirectResponse{
       // Validasi Form
       $this->validate($request, [
@@ -54,4 +40,10 @@ class PostController extends Controller{
 
       return redirect()->route('posts.index')->with(['success' => 'Data Berhasil Disimpan!']);
      }
+
+   // Method Show
+   public function show(string $id): view{
+      $post = Post::findOrFail($id);
+      return view('posts.show', compact('post'));
+   }
 }
