@@ -22,7 +22,7 @@ class PostController extends Controller{
      public function store(Request $request): RedirectResponse{
       // Validasi Form
       $this->validate($request, [
-         'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+         'image' => 'required|image|mimes:jpeg,png,jpg,gif',
          'title' => 'required|min:5',
          'content' => 'required|min:10'
       ]);
@@ -55,7 +55,7 @@ class PostController extends Controller{
 
    public function update(Request $request, $id): RedirectResponse{
       $this->validate($request, [
-         'image' => 'image|mimes:jpeg,png,jpg|max:2048',
+         'image' => 'image|mimes:jpeg,png,jpg',
          'title' => 'required|min:5',
          'content' => 'required|min:10'
       ]);
@@ -77,5 +77,13 @@ class PostController extends Controller{
          ]);
       }
       return redirect()->route('posts.index')->with(['success' => 'Data Berhasil Diupdate!']);
+   }
+
+   // METHOD HAPUS
+   public function destroy($id): RedirectResponse{
+      $post = Post::findOrFail($id);
+      Storage::delete('public/posts/'.$post->image);
+      $post->delete();
+      return redirect()->route('posts.index')->with(['success' => 'Data berhasil dihapus!']);
    }
 }
