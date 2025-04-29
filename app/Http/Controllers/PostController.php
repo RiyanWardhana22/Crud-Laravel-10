@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
+
 class PostController extends Controller{
    // METHOD INDEX
      public function index(): View{
@@ -60,7 +61,7 @@ class PostController extends Controller{
       ]);
 
       $post = Post::findOrFail($id);
-      if ($request->hashFile('image')){
+      if ($request->hasFile('image')){
          $image = $request->file('image');
          $image->storeAs('public/posts', $image->hashName());
          Storage::delete('public/posts/'.$post->image);
